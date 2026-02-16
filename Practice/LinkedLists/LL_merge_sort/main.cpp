@@ -41,11 +41,13 @@ int main()
 	//Implement a sorting routine for your list
 	//You may implement any elementary sorting algorithm.
 	
-	// left.slowSort();
-	// right.slowSort();
+	left.slowSort();
+	right.slowSort();
 
-	// left.print(); //230 320 450 510 720 750
-	// right.print(); //210 240 290 320 530 820
+	left.print(); //230 320 450 510 720 750
+    cout << "Slow sorted left ^" << endl;
+	right.print(); //210 240 290 320 530 820
+    cout << "Slow sorted right ^" << endl;
 
 	//Implement a method that takes 2 sorted lists and merges them
 	//into your (initially empty) list to create one sorted list.

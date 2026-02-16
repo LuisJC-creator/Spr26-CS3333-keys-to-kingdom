@@ -74,7 +74,7 @@ public:
         }
         cout << endl; //extra line for list.
     }
-}
+   }
     
   void split(linkedList &left, linkedList &right){
     //Split the contents of list A evenly into the two given (initially empty) lists.
@@ -131,6 +131,29 @@ public:
     // clear the current list we don't need it anymore.
     this->clear();
     cout << "Don't get baited, ^ is the previous print" << endl;
-}
+    }
+
+    void slowSort(){
+        
+        if(head == nullptr || head == tail){
+            return; // it is empty or already sorted
+        }
+
+        node* smallest = head;
+        // do selection sort on the list.
+        for(node* i = head; i != nullptr; i = i->next){
+            // do swaps on the elements after comparison
+            smallest = i;
+            for(node* j = i->next; j != nullptr; j=j->next){
+                if(j->data < smallest->data){
+                    smallest = j;
+                }
+            }
+            // once we have our smallest, swap it with i
+            T temp = i->data;
+            i->data = smallest->data;
+            smallest->data = temp;
+        }
+    }
 
 };
