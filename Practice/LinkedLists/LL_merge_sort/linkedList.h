@@ -156,4 +156,8 @@ public:
         }
     }
 
+    void merge(linkedList &left, linkedList &right){
+        
+    }
+
 };

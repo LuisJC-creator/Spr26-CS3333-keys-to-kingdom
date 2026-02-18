@@ -52,11 +52,11 @@ int main()
 	//Implement a method that takes 2 sorted lists and merges them
 	//into your (initially empty) list to create one sorted list.
 	//Must run in O(n) time, where n is the total number of items in the two given lists.
-	// A.merge(left, right);
+	A.merge(left, right);
 
-	// left.print(); //(empty)
-	// right.print(); //(empty)
-	// A.print(); //210 230 240 290 320 320 450 510 530 720 750 820
+	left.print(); //(empty)
+	right.print(); //(empty)
+	A.print(); //210 230 240 290 320 320 450 510 530 720 750 820
 
 
 	//Add a methods to load your list from a file, and write your list to a file
