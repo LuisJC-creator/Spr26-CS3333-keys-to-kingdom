@@ -15,6 +15,12 @@ void Autocompleter::insert(string x, int freq){
         if(!current->children[temp]){
             current->children[temp] = new Node();
             current->children[temp]->top.push_back(tempE);
+            
+            // push back all elements of previous node's list
+            for(int i = 0; i < current->top.size(); i++){
+                current->children[temp]->top.push_back(current->top[i]);
+            }
+
             current=current->children[temp];
         }
         else {
@@ -27,10 +33,15 @@ void Autocompleter::insert(string x, int freq){
             }
             if(!withinList){
                 current->top.push_back(tempE);
+                //sort
             }
         }
     }
     current->marked = true;
+}
+
+int Autocompleter::recSize(Node* p){
+
 }
 
 int Autocompleter::size(){

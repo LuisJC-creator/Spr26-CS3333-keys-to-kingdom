@@ -24,9 +24,6 @@ class Autocompleter
 		// Must run in O(1) time.
 		void insert(string x, int freq);
 
-		// A recursive helper for the size function that I added.
-		int recSize(Node* p);
-
 		// Returns the number of strings in the dictionary.
 		// 
 		// Must run in O(1) time.
@@ -70,6 +67,9 @@ class Autocompleter
 
 		// Number of marked nodes in the trie-based data structure
 		int count;
+
+		// A recursive helper for the size function that I added.
+		int recSize(Node* p);
 };
 
 #endif
