@@ -68,8 +68,8 @@ class Autocompleter
 		// Number of marked nodes in the trie-based data structure
 		int count;
 
-		// A recursive helper for the size function that I added.
-		int recSize(Node* p);
+		// Recursive helper for the size function.
+		int numStrings(Node* p);
 };
 
 #endif

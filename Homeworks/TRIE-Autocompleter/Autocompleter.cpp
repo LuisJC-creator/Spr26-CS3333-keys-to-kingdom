@@ -40,12 +40,26 @@ void Autocompleter::insert(string x, int freq){
     current->marked = true;
 }
 
-int Autocompleter::recSize(Node* p){
+// implementation for my recursive helper.
+int Autocompleter::numStrings(Node* p){
+    if(p == nullptr){
+        return 0;
+    }
+    
+    int count = 0;
+    if(p->marked){
+        count = 1;
+    }
+
+    for(int i = 0; i < 256; i++){
+        count += numStrings(p->children[i]);
+    }
+    return count;
 
 }
 
 int Autocompleter::size(){
-    recSize(root);
+    numStrings(root);
 }
 
 void Autocompleter::completions(string x, vector<string> &T){
