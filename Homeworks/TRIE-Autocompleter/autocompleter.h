@@ -61,7 +61,7 @@ class Autocompleter
 				vector<Entry> top;
 				Node* children[256];
 		};
-
+		
 		// Root of the trie-based data structure
 		Node* root;
 
@@ -70,6 +70,9 @@ class Autocompleter
 
 		// Recursive helper for the size function.
 		int numStrings(Node* p);
+
+		// helper to maintain the entry vector.
+		void updateTop(Node* p, Entry e);
 };
 
 #endif
