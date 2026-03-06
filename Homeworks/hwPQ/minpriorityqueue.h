@@ -23,6 +23,7 @@ class MinPriorityQueue
 		MinPriorityQueue()
 		{
 			// TODO
+            // Constructor can be empty, we just need to create the empty internal array, which is done, and nothing else.
 		}
 
 		// Returns the number of elements in the MinPriorityQueue.
@@ -30,7 +31,9 @@ class MinPriorityQueue
 		// Must run in O(1) time.
 		int size()
 		{
-			// TODO	
+			// TODO
+            // just return the size of the vector of pairs.
+            return H.size();
 		}	
 
 		// Pushes a new value x with priority p
@@ -40,6 +43,10 @@ class MinPriorityQueue
 		void push(T x, int p)
 		{
 			// TODO
+            pair<T, int> temp(x, p);
+            H.push_back(temp);
+            bubbleUp(H.size()-1);
+            
 		}
 
 		// Returns the value at the front of the MinPriorityQueue.
@@ -48,7 +55,12 @@ class MinPriorityQueue
 		// Must run in O(1) time.
 		T front()
 		{
-			// TODO	
+			if(H.size() > 0){
+                return H[0].first;
+            }
+            // throw some generic error if front() is called on an empty array.
+            throw exception();
+            
 		}
 
 		// Removes the value at the front of the MinPriorityQueue.
@@ -76,6 +88,19 @@ class MinPriorityQueue
 		// but you can add some if you want to.
 		vector< pair<T, int> > H; // The heap.
 		unordered_map<T, int> I;  // Maps values to their indices in H.
+
+        int parent(int index){
+            return (index - 1) / 2;
+        }
+        
+        void bubbleUp(int index){
+            // bubble up, insert at available spot (done, now this is called)
+            // we need to compare this element against its parent, if it is smaller, swap.
+            while(index > 0 && H[index].second < H[parent(index)].second){ // check index > 0 to prevent accessing invalid array indicies.
+                swap(H[index], H[parent(index)]);
+                index = parent(index);
+            }
+        }
 };
 
 #endif 
