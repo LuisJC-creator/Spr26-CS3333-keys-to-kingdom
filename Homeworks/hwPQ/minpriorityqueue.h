@@ -70,6 +70,18 @@ class MinPriorityQueue
 		void pop()
 		{
 			// TODO	
+            // check array size first, in case someone calls it on something dumb
+            if(H.size() == 0){
+                throw exception();
+            }
+            else if(H.size() == 1){ // easy case
+                H.pop_back();
+            }
+            else{ // standard extractMin stuff
+                swap(H[0], H[H.size()-1]);
+                H.pop_back();
+                bubbleDown(0);
+            }
 		}
 
 		// If x is in the MinPriorityQueue 
@@ -99,6 +111,14 @@ class MinPriorityQueue
             while(index > 0 && H[index].second < H[parent(index)].second){ // check index > 0 to prevent accessing invalid array indicies.
                 swap(H[index], H[parent(index)]);
                 index = parent(index);
+            }
+        }
+        
+        void bubbleDown(int index){
+            int left = 2*index - 1;
+            int right = 2*index - 2;
+            while(H[index].second > ){
+                if()
             }
         }
 };
