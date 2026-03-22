@@ -103,16 +103,19 @@ string solve(string maze){
     unordered_map<Vertex*, Vertex*> breadCrumbs;
     breadFirstSearch(entryVert, breadCrumbs);
 
-    // trace the path
-    string path;
+    // we need to trace the path from exit to entry, editing the map string at each location.
     Vertex* cur = exitVert;
     while (cur != entryVert){
-        path = cur-> // what goes here actually?
+        int temp_index = (cur->row - 1) * (width + 1) + (cur->col - 1); // this is the string index (i think it was off by 1 from the start oh well)
+        // actually change the map here
+        maze[temp_index] = 'o';
         cur = breadCrumbs.at(cur);
     }
-    
-    path = entryVert ?? + ", " + path;
-    return path;
+    // mark the entrance too.
+    int entry_index = (entryVert->row - 1) * (width + 1) + (entryVert->col - 1);
+    maze[entry_index] = 'o';
+
+    return maze;
 }
 
 

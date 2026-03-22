@@ -45,7 +45,6 @@ class MinPriorityQueue
 			// TODO
             pair<T, int> temp(x, p);
             H.push_back(temp);
-			I[x] = H.size() - 1;
             bubbleUp(H.size()-1);
             
 		}
@@ -58,7 +57,10 @@ class MinPriorityQueue
 		{
 			if(H.size() > 0){
                 return H[0].first;
-            } 
+            }
+            // throw some generic error if front() is called on an empty array.
+            throw exception();
+            
 		}
 
 		// Removes the value at the front of the MinPriorityQueue.
@@ -70,20 +72,14 @@ class MinPriorityQueue
 			// TODO	
             // check array size first, in case someone calls it on something dumb
             if(H.size() == 0){
-                return;
+                throw exception();
             }
             else if(H.size() == 1){ // easy case
-                T val = H[0].first;
-				I.erase(val);
-				H.pop_back();
+                H.pop_back();
             }
             else{ // standard extractMin stuff
-				I[H[0].first] = H.size()-1;
-				I[H[H.size()-1].first] = 0;
                 swap(H[0], H[H.size()-1]);
-                T val = H[H.size()-1].first;
-				I.erase(val);
-				H.pop_back();
+                H.pop_back();
                 bubbleDown(0);
             }
 		}
@@ -97,15 +93,6 @@ class MinPriorityQueue
 		void decrease_key(T x, int new_p)
 		{
 			// TODO
-			if(I.count(x) == 0){
-				return;
-			}
-			else{
-				if(H[I[x]].second >= new_p){
-					H[I[x]].second = new_p;
-					bubbleUp(I[x]);
-				}
-			}
 		}
 
 	private:
@@ -122,9 +109,7 @@ class MinPriorityQueue
             // bubble up, insert at available spot (done, now this is called)
             // we need to compare this element against its parent, if it is smaller, swap.
             while(index > 0 && H[index].second < H[parent(index)].second){ // check index > 0 to prevent accessing invalid array indicies.
-                I[H[index].first] = parent(index);
-				I[H[parent(index)].first] = index;
-				swap(H[index], H[parent(index)]);
+                swap(H[index], H[parent(index)]);
                 index = parent(index);
             }
         }
@@ -132,36 +117,22 @@ class MinPriorityQueue
         void bubbleDown(int index){
             int left = 2*index + 1;
             int right = 2*index + 2;
-			int smallest;
-			
-			do {
-				if(right >= H.size()){
-					if (left >= H.size()) 
-						break;  // no children at all
-						
-					smallest = left;
-				}
-				else if(H[left].second < H[right].second){
-					smallest = left;
-				}
-				else{
-					smallest = right;
-				}
-				
-				if(H[index].second > H[smallest].second){
-					I[H[index].first] = smallest;
-					I[H[smallest].first] = index;
-					swap(H[index], H[smallest]);
-					index = smallest;
-					left = 2*smallest + 1;
-					right = 2*smallest + 2;
-				}
-				else{
-					break;
-				}
-			}
-			while(left < H.size());            
-        	}
+            while(H[index] > H[left] || H[index] > H[right]){
+                if(H[left] < H[right]){
+                    swap(H[index], H[left]);
+                    index = left;
+                    left = 2*index + 1;
+                    right = 2*index + 2;
+                }
+                else {
+                    swap(H[index], H[right]);
+                    index = right;
+                    left = 2*index + 1;
+                    right = 2*index + 2;
+                }
+            }
+            //done
+        }
 };
 
 #endif 
