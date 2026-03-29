@@ -25,45 +25,45 @@ string solve(string maze){
             col = 1;
             row++;
         }
-        else if(row == 1 || row == lastRow || col == 1 || col == width){ // lol, this checks if we are at a boundary to find entry and exist correctly
-            if(blankCount == 0 && maze[i] == ' '){
-                entryVert = new Vertex(row, col);
-                VertexMap[row * width + col] = entryVert;
-                blankCount++;
-                col++;
-            }
-            else if(blankCount == 1 && maze[i] == ' '){
-                exitVert = new Vertex(row, col);
-                VertexMap[row * width + col] = exitVert;
-                col++;
-            }
-            else{
-                col++;
-            }
-        }
-        else if(isDigit(maze[i])){
-            // do things, now you're thinking with portals.
-            // if we encounter an number, we need to create a weighted edge between the two.
-            // think of problem framing. we maybe need to go back and assign each of the edges from before a default weight
-        }
+        
         else if (maze[i] != '#'){
-            Vertex* temp = new Vertex(row, col);
-            VertexMap[row * width + col] = temp;
-            col++;
+            if (row == 1 || row == lastRow || col == 1 || col == width) { // it is on the boundary (it can only be a digit or blank space.)
+                // make entrance or exit
+                if(blankCount == 0){
+                    entryVert = new Vertex(row, col);
+                    VertexMap[row * width + col] = entryVert;
+                    blankCount++;
+                    col++;
+                }
+
+                else if(blankCount == 1){
+                    exitVert = new Vertex(row, col);
+                    VertexMap[row * width + col] = exitVert;
+                    col++;
+                }
+            }
         }
+
         else {
             // we hit a wall.
             col++;
         }
     }
-}
 
-bool isDigit(char c){
-    char digitList[10] = {'0','1','2','3','4','5','6','7','8','9'};
-    for(int i = 0; i < 10; i++){
-        if(c == digitList[i]){
-            return true;
+     // when the above is done, we have a map filled with vertexes.
+
+    // now we just loop through the map, find the valid neighbors in the 4 directions. (n, s, w, e)
+    for(auto& [key, vertex] : VertexMap){
+        for(int i = 0; i < 4; i++){
+            // need this to find the key.
+            int neighborRow = vertex->row + dirs[i][0];
+            int neighborCol = vertex->col + dirs[i][1];
+
+            int neighborKey = neighborRow * width + neighborCol;
+            if(VertexMap.find(neighborKey) != VertexMap.end()){
+                // add it to the neighbor list if it is in the map
+                vertex->neighs.push_back(VertexMap[neighborKey]);
+            }
         }
     }
-    return false;
 }
