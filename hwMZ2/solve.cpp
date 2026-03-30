@@ -1,5 +1,6 @@
 #include "solve.h"
 #include "vertex.h"
+#include "minpriorityqueue.h"
 
 string solve(string maze){
         // stuff we need.
@@ -12,8 +13,9 @@ string solve(string maze){
     Vertex* exitVert;
     int blankCount = 0;
     int lastRow = 0;
+    Vertex* portalList[10] = {nullptr}; // logic: if portalList[digit-1] == nullptr, add the vertex* to the list. else: we know it's the second time we encountered the digit, we can make the weighted edge here based on the digit.
 
-    // quick loop to find howm any rows so the loop below works properly
+    // quick loop to find how many rows so the loop below works properly
     for(int i = 0; i < maze.size(); i++){
         if (maze[i] == '\n')
             lastRow++;
@@ -27,21 +29,35 @@ string solve(string maze){
         }
         
         else if (maze[i] != '#'){
-            if (row == 1 || row == lastRow || col == 1 || col == width) { // it is on the boundary (it can only be a digit or blank space.)
-                // make entrance or exit
+            Vertex* temp = new Vertex(row, col);
+            VertexMap[row*width+col] = temp;
+
+            if (isDigit(maze[i])){
+                    // add it to the portalList
+                    if (portalList[maze[i] - '0'] == nullptr){
+                        portalList[maze[i] - '0'] = temp; // some ASCII value arithmetic for you.
+                    }
+                    else {
+                        // create the weighted edge.
+                        int index = maze[i] - '0';
+                        portalList[index]->neighs.push_back(make_pair(temp, index)); // create edge from A -> B
+                        temp->neighs.push_back(make_pair(portalList[index], index));
+                    }
+                }
+            
+            if (row == 1 || row == lastRow || col == 1 || col == width) { // it is on the boundary (it can only be a digit or blank space).
+
                 if(blankCount == 0){
-                    entryVert = new Vertex(row, col);
-                    VertexMap[row * width + col] = entryVert;
+                    entryVert = temp;
                     blankCount++;
-                    col++;
                 }
 
                 else if(blankCount == 1){
-                    exitVert = new Vertex(row, col);
-                    VertexMap[row * width + col] = exitVert;
-                    col++;
+                    exitVert = temp;
                 }
             }
+            col++;
+            
         }
 
         else {
@@ -62,8 +78,19 @@ string solve(string maze){
             int neighborKey = neighborRow * width + neighborCol;
             if(VertexMap.find(neighborKey) != VertexMap.end()){
                 // add it to the neighbor list if it is in the map
-                vertex->neighs.push_back(VertexMap[neighborKey]);
+                vertex->neighs.push_back(make_pair(VertexMap[neighborKey], 1));
             }
         }
+    }
+
+    // Now that we have the graph, we do Djikstra's stuff
+
+}
+
+bool isDigit(char c){
+    char digitList[10] = {'0','1','2','3','4','5','6','7','8','9'};
+    for(int i = 0; i < 10; i++){
+        if(c == digitList[i]){ return true;}
+        else {return false;}
     }
 }
