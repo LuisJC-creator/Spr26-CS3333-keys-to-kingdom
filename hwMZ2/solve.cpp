@@ -2,6 +2,14 @@
 #include "vertex.h"
 #include "minpriorityqueue.h"
 
+bool isDigit(char c){
+    char digitList[10] = {'0','1','2','3','4','5','6','7','8','9'};
+    for(int i = 0; i < 10; i++){
+        if(c == digitList[i]){ return true;}
+    }
+    return false;
+}
+
 string solve(string maze){
         // stuff we need.
     int row = 1;
@@ -84,13 +92,44 @@ string solve(string maze){
     }
 
     // Now that we have the graph, we do Djikstra's stuff
+    MinPriorityQueue<Vertex*> pq;
+    unordered_map<Vertex*, Vertex*> breadCrumbs;
+    unordered_map<Vertex*, int> costTable;
 
-}
-
-bool isDigit(char c){
-    char digitList[10] = {'0','1','2','3','4','5','6','7','8','9'};
-    for(int i = 0; i < 10; i++){
-        if(c == digitList[i]){ return true;}
-        else {return false;}
+    for( auto& [key, vertex] : VertexMap){
+        pq.push(vertex, 10000); // put their priority, or cost as something large, trying to mock infinity (can't be larger than 9 in the maze anyways lol)
+        costTable[vertex] = 10000;
     }
+    costTable[entryVert] = 0; // fix this after
+    pq.decrease_key(entryVert, 0);
+
+    while(pq.size() != 0) { // while not empty.
+        // get the min
+        Vertex* x = pq.front();
+        pq.pop();
+
+        // relax all neighbors
+        for(auto y : x->neighs){
+            if ((costTable[x] + y.second) < costTable[y.first]){
+                costTable[y.first] = costTable[x] + y.second;
+                pq.decrease_key(y.first, costTable[y.first]);
+                breadCrumbs[y.first] = x;
+            }
+        }
+    }
+
+    // once the above loop is done, we should have the correct breadCrumbs. (SAME CODE FROM MZ1)
+    Vertex* cur = exitVert;
+    while (cur != entryVert){
+        int temp_index = (cur->row - 1) * (width + 1) + (cur->col - 1); // this is the string index (i think it was off by 1 from the start oh well)
+        // actually change the map here
+        maze[temp_index] = 'o';
+        cur = breadCrumbs.at(cur);
+    }
+    // mark the entrance too.
+    int entry_index = (entryVert->row - 1) * (width + 1) + (entryVert->col - 1);
+    maze[entry_index] = 'o';
+
+    return maze;
 }
+
