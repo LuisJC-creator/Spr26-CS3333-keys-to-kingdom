@@ -20,21 +20,21 @@ int CoinProblem(int n, std::vector<int> coins){
     // initial confusion: I thought we needed to build a graph, but we can just think of the graph as implicit.
     // n is our goal, each Vertex encodes our total. The possible paths or neighbors are the set k.
     int steps = 0;
-    std::vector<int> tracker(n+1, 0);
+    std::vector<bool> tracker(n+1, false); // this only exists as a "marked" type structure for bfs // changed to bool array *credit Xavier
     std::queue<Vertex*> Q;
     Vertex* s = new Vertex(0, nullptr); // start somewhere
     Q.push(s);
-    while(!Q.empty()){
+    while(!Q.empty()){ // BFS style.
         Vertex* x = Q.front();
         Q.pop();
         
         // is the coin type valid?
         for(int i = 0; i < coins.size(); i++){
             int new_sum = x->total + coins[i];
-            if((new_sum <= n) && tracker[new_sum] == 0) {
+            if((new_sum <= n) && tracker[new_sum] == false) { // have we seen it already? don't revisit, helps the runtime
                 // make neighbors
                 x->neighs.push_back(new Vertex((new_sum), x));
-                tracker[new_sum]++;
+                tracker[new_sum] = true;
             }
         }
 
@@ -63,8 +63,8 @@ int CoinProblem(int n, std::vector<int> coins){
 
 int main(){
     // idea: graph is implicit, you can do a BFS style approach.
-    int n = 34; // what we want to make change for
-    std::vector<int> k = {1, 7, 10}; // set of coins.
+    int n = 5; // what we want to make change for
+    std::vector<int> k = {1, 1, 1, 11, 1, 4}; // set of coins.
     std::cout << "Number of coins needed: " << CoinProblem(n, k) << std::endl;
 
     return 0;
